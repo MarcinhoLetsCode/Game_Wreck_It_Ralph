@@ -12,7 +12,7 @@ const state = {
         gameTime: 1000,
         hitPosition: 0,
         result: 0,
-        currentTime: 3,
+        currentTime: 60,
         currentLife: 3,
     },
     actions: {
@@ -28,19 +28,6 @@ const state = {
     if (state.values.currentTime <= 0) {
       clearInterval(state.actions.countDownTimerId);
       clearInterval(state.actions.timerId);
-      state.values.currentLife--;
-      state.view.life.textContent = state.values.currentLife;
-      if (state.values.currentLife <= 0) {
-        state.view.squares.forEach((square) => {
-            square.classList.remove("enemy");
-        });
-        if(!alert("Game Over! O seu resultado foi: " + state.values.result)){
-            if(!alert(`Restarting Game...`)){window.location.reload();}
-        }
-      } else {
-        alert("Menos Uma Vida!");
-        continueGame();
-      }
     }
   }
   
@@ -76,18 +63,25 @@ const state = {
                 square.classList.remove("enemy");
             });
           //});
+        } else if (square.id !== state.values.hitPosition) {
+            //alert('Errou!');
+            state.values.currentLife--;
+            state.view.life.textContent = state.values.currentLife;
+            checkLife();
         }
       });
     });
   }
 
-  function continueGame() {
-    state.values.currentTime = 3;
-    state.view.timeLeft.textContent = state.values.currentTime;
-    state.view.score.textContent = state.values.result;
-    state.actions.timerId = setInterval(randomSquare, state.values.gameVelocity);
-    state.actions.countDownTimerId = setInterval(countDown, state.values.gameTime);
-    
+  function checkLife() {
+    if (state.values.currentLife <= 0) {
+        state.view.squares.forEach((square) => {
+            square.classList.remove("enemy");
+        });
+        if(!alert("Game Over! O seu resultado foi: " + state.values.result)){
+            if(!alert(`Restarting Game...`)){window.location.reload();}
+        }
+    }  
   }
   
   //Funcao Principal
